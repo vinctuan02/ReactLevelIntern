@@ -1,23 +1,23 @@
 import { useState } from "react"
 import { postCreateUser } from "../services/UserService"
-import { ToastContainer, toast } from 'react-toastify';
+import { toast } from 'react-toastify';
 
 
 const { Modal, Button, Form } = require("react-bootstrap")
 
 const ModalAddNew = (props) => {
-    const [name, setName] = useState("")
-    const [job, setJob] = useState("")
+    const [email, setEmail] = useState("")
+    const [password, setPassword] = useState("")
 
-    const { handleClose, show } = props
+    const { handleClose, show, titleModal } = props
 
     const handleOnSave = async () => {
-        let res = await postCreateUser(name, job)
+        let res = await postCreateUser(email, password)
         console.log(res);
-        if (res && res.id) {
+        if (res && res.data && res.data.id) {
             handleClose()
-            setName("")
-            setJob("")
+            setEmail("")
+            setPassword("")
             toast.success("Create User Succeed")
         } else {
             toast.error("Error")
@@ -29,26 +29,26 @@ const ModalAddNew = (props) => {
         <>
             <Modal show={show} onHide={handleClose}>
                 <Modal.Header closeButton>
-                    <Modal.Title>Add new user</Modal.Title>
+                    <Modal.Title>{titleModal}</Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
                     <div className="body-add-new">
                         <div>
                             <Form.Group className="mb-3">
-                                <Form.Label>Name</Form.Label>
+                                <Form.Label>email</Form.Label>
                                 <Form.Control
-                                    type="text" placeholder="Enter name"
-                                    value={name}
-                                    onChange={(event) => setName(event.target.value)}
+                                    type="text"
+                                    value={email}
+                                    onChange={(event) => setEmail(event.target.value)}
                                 />
                             </Form.Group>
 
                             <Form.Group className="mb-3">
-                                <Form.Label>Job</Form.Label>
+                                <Form.Label>password</Form.Label>
                                 <Form.Control
-                                    type="text" placeholder="Job"
-                                    value={job}
-                                    onChange={(event) => setJob(event.target.value)}
+                                    type="text"
+                                    value={password}
+                                    onChange={(event) => setPassword(event.target.value)}
                                 />
                             </Form.Group>
                         </div>

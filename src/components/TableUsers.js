@@ -8,18 +8,22 @@ import ModalAddNew from './ModalAddNew';
 
 const TableUsers = (props) => {
 
-    const [isShowModalAddNew, setIsShowModalAddNew] = useState(false)
-    const handleClose = () => {
-        setIsShowModalAddNew(false)
-    }
+    const [isShowModal, setIsShowModal] = useState(false)
+
 
     const [listUsers, setListUsers] = useState()
     const [totalUsers, setTotalUsers] = useState(0)
     const [totalPages, settotalPages] = useState(0)
 
+    const [titleModal, setTitleModal] = useState()
+
     useEffect(() => {
         getUsers(1)
     }, [])
+
+    const handleClose = () => {
+        setIsShowModal(false)
+    }
 
     const getUsers = async (page) => {
         let res = await fetchAllUser(page)
@@ -28,6 +32,11 @@ const TableUsers = (props) => {
             setTotalUsers(res.total)
             settotalPages(res.total_pages)
         }
+    }
+
+    const showModal = (titleModal, item) => {
+        setTitleModal(titleModal)
+        setIsShowModal(true)
     }
 
     const handlePageClick = (event) => {
@@ -44,7 +53,7 @@ const TableUsers = (props) => {
                 </span>
                 <button
                     className='btn btn-success'
-                    onClick={() => setIsShowModalAddNew(true)}
+                    onClick={() => showModal('Add new user')}
                 >Add new User</button>
             </div>
             <Table striped bordered hover>
@@ -68,7 +77,10 @@ const TableUsers = (props) => {
                                     <td>{item.first_name}</td>
                                     <td>{item.last_name}</td>
                                     <td>
-                                        <button className='btn btn-warning mx-3'>Edit</button>
+                                        <button
+                                            className='btn btn-warning mx-3'
+                                            onClick={() => showModal('Edit user', item)}
+                                        >Edit</button>
                                         <button className='btn btn-danger mx-3'>Delete</button>
                                     </td>
                                 </tr>
@@ -98,8 +110,11 @@ const TableUsers = (props) => {
                 activeClassName="active"
             />
             < ModalAddNew
-                show={isShowModalAddNew}
+                show={isShowModal}
                 handleClose={handleClose}
+                titleModal={titleModal}
+                nameUser
+                jobUser
             />
         </>
     )
